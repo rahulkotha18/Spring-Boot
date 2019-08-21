@@ -2,6 +2,7 @@ package com.springbootrest.cruddemo.CONTROLLER;
 
 import com.springbootrest.cruddemo.DAO.EmployeeDAO;
 import com.springbootrest.cruddemo.ENTITY.Employee;
+import com.springbootrest.cruddemo.EXCEPTION.EmployeeNotFoundException;
 import com.springbootrest.cruddemo.SERVICE.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +28,10 @@ public class EmployeeController {
     @GetMapping("/employee/{id}")
     public Employee getEmployee(@PathVariable int id)
     {
-        return employeeService.get(id);
+        Employee employee=employeeService.get(id);
+        if(employee==null)
+            throw new EmployeeNotFoundException("Employee not found");
+        return employee;
     }
     @PostMapping("/employee")
     public Employee saveEmployee(@RequestBody Employee e)
@@ -44,6 +48,9 @@ public class EmployeeController {
     @DeleteMapping("/employee/{id}")
     public String deleteEmployee(@PathVariable int id)
     {
+        Employee employee=employeeService.get(id);
+        if(employee==null)
+            throw new EmployeeNotFoundException("No Employee!");
         return employeeService.delete(id);
     }
 
